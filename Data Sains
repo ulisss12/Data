@@ -1,1 +1,67 @@
 
+import numpy as np
+import pandas as pd
+
+# === Baca data dari file CSV ===
+data = pd.read_csv("calon_tni.csv")
+
+# === Data Calon TNI ===
+print("=== Data Calon TNI ===")
+print(data.to_string(index=False))
+
+# === Statistik Dasar Tinggi Badan ===
+print("\n=== Statistik Dasar Tinggi Badan ===")
+print(data['tinggi'].describe())
+
+# Hitung statistik tambahan
+rata = np.mean(data['tinggi'])
+tertinggi = np.max(data['tinggi'])
+terendah = np.min(data['tinggi'])
+median = np.median(data['tinggi'])
+
+print(f"\nRata-rata Tinggi : {rata:.2f} cm")
+print(f"Tertinggi : {tertinggi} cm")
+print(f"Terendah : {terendah} cm")
+print(f"Median : {median} cm")
+
+# === Calon di atas rata-rata tinggi ===
+print("\n=== Calon di atas rata-rata tinggi ===")
+atas_rata = data[data['tinggi'] > rata]
+print(atas_rata.to_string(index=False))
+
+# === Calon dengan Tinggi Terendah ===
+print("\n=== Calon dengan Tinggi Terendah ===")
+bawah = data[data['tinggi'] == terendah]
+print(bawah.to_string(index=False))
+
+# === Tambahkan kategori tinggi ===
+def kategori_tinggi(t):
+    if t < 160:
+        return "Pendek"
+    elif 160 <= t <= 170:
+        return "Normal"
+    else:
+        return "Tinggi"
+
+data['kategori'] = data['tinggi'].apply(kategori_tinggi)
+
+print("\n=== Data dengan Kategori Tinggi ===")
+print(data.to_string(index=False))
+
+# === Jumlah Calon per Kategori ===
+print("\n=== Jumlah Calon per Kategori ===")
+jumlah_kategori = data['kategori'].value_counts()
+print(jumlah_kategori.to_string())
+
+# === Statistik Lanjutan ===
+print("\n=== Statistik Lanjutan ===")
+print(f"Variansi : {np.var(data['tinggi']):.2f}")
+print(f"Standar Deviasi : {np.std(data['tinggi']):.2f}")
+
+# === Calon dengan Tinggi Badan Tertinggi ===
+print("\n=== Calon dengan Tinggi Badan Tertinggi ===")
+calon_tertinggi = data[data['tinggi'] == tertinggi]
+for i, row in calon_tertinggi.iterrows():
+    print(f"Nama : {row['nama']}")
+    print(f"Alamat : {row['alamat']}")
+    print(f"Tinggi : {row['tinggi']} cm")
